@@ -15,7 +15,11 @@ function computerPlay() {
     return play;
 }
 
+over = false;
+
 function playRound(playerSelection, computerSelection) {
+    if (over)
+        return;
     let outcome;
     playerSelection = playerSelection.toLowerCase();
     computerSelection = computerSelection.toLowerCase();
@@ -44,29 +48,72 @@ function playRound(playerSelection, computerSelection) {
             outcome = "It was a tie!";
         }
     }
+    // console.log(outcome);
+    let res = document.querySelector("#result");
+    res.innerHTML = outcome;
+    updateGame(outcome);
     return outcome;
 }
 
-function game() {
-    let userScore = 0;
-    let computerScore = 0;
-    for (let i = 0; i < 5; i++) {
-        let userPlay = prompt("What move do you want to play this round?");
-        let outcome = playRound(userPlay, computerPlay());
-        console.log(outcome);
-        let keyword = outcome.split(" ")[1];
+let userScore = 0
+let computerScore = 0
+
+function updateGame(msg) {
+    let keyword = msg.split(" ")[1];
         if (keyword == "win!")
             userScore++;
         else if (keyword == "was")
             ;
         else
             computerScore++;
-    }
+
+    let userDom = document.querySelector("#userScore");
+    let compDom = document.querySelector("#compScore");
+
+    userDom.innerHTML = `Your score: ${userScore}`;
+    compDom.innerHTML = `Computer score: ${computerScore}`;
+    
+    if (userScore < 5 && computerScore < 5)
+        return;
+    
+    let final;
+    let res = document.querySelector("#result");
+
     if (userScore > computerScore) {
-        console.log("You have won!");
+        final = "You have won the game!";
     } else if (userScore < computerScore) {
-        console.log("You have lost!");
+        final = "You have lost the game!";
     } else {
-        console.log("You tied!");
+        final = "You tied!";
     }
+    over = true;
+    res.innerHTML = final;
 }
+
+buttons = document.querySelectorAll("button");
+
+buttons.forEach(button => button.addEventListener("click", e => {playRound(button.id, computerPlay())}));
+
+// function game() {
+//     let userScore = 0;
+//     let computerScore = 0;
+//     for (let i = 0; i < 5; i++) {
+//         let userPlay = prompt("What move do you want to play this round?");
+//         let outcome = playRound(userPlay, computerPlay());
+//         console.log(outcome);
+//         let keyword = outcome.split(" ")[1];
+//         if (keyword == "win!")
+//             userScore++;
+//         else if (keyword == "was")
+//             ;
+//         else
+//             computerScore++;
+//     }
+//     if (userScore > computerScore) {
+//         console.log("You have won!");
+//     } else if (userScore < computerScore) {
+//         console.log("You have lost!");
+//     } else {
+//         console.log("You tied!");
+//     }
+// }
